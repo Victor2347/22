@@ -1,0 +1,69 @@
+<section class="todo-app">
+  <header class="hero">
+    <p class="tag">Angular Signals × 新手示範</p>
+    <h1>待辦清單</h1>
+    <p class="sub">輸入任務後按 Enter 或點「新增」就能加入清單</p>
+  </header>
+
+  <form class="todo-form" (submit)="addTodo(); $event.preventDefault()">
+    <input
+      type="text"
+      name="title"
+      [(ngModel)]="newTitle"
+      placeholder="例如：閱讀 Angular 官方教學"
+      autocomplete="off"
+    />
+    <button type="submit">新增</button>
+  </form>
+
+  <div class="toolbar">
+    <div class="filters">
+      <button type="button" [class.active]="filter() === 'all'" (click)="setFilter('all')">
+        全部
+      </button>
+      <button type="button" [class.active]="filter() === 'active'" (click)="setFilter('active')">
+        未完成
+      </button>
+      <button type="button" [class.active]="filter() === 'done'" (click)="setFilter('done')">
+        已完成
+      </button>
+    </div>
+    <div class="stats">
+      <span>剩餘 {{ remainingCount() }} 項</span>
+      @if (hasCompleted()) {
+        <button type="button" class="ghost" (click)="clearCompleted()">清除已完成</button>
+      }
+      <button type="button" class="ghost danger" (click)="clearStorageData()">
+        清除所有保存的資料
+      </button>
+    </div>
+  </div>
+
+  <ul class="todo-list">
+    @if (filteredTodos().length === 0) {
+      <li class="empty">目前沒有符合條件的待辦，開始新增吧！</li>
+    } @else {
+      @for (todo of filteredTodos(); track todo.id) {
+        <li class="todo-item" [class.done]="todo.done">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="todo.done"
+              (change)="toggleTodo(todo.id)"
+            />
+            <span>{{ todo.title }}</span>
+          </label>
+          <button
+            type="button"
+            class="icon"
+            aria-label="刪除待辦"
+            (click)="removeTodo(todo.id)"
+          >
+            ✕
+          </button>
+        </li>
+      }
+    }
+  </ul>
+</section>
+
