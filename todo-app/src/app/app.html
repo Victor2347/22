@@ -5,6 +5,17 @@
     <p class="sub">輸入任務後按 Enter 或點「新增」就能加入清單</p>
   </header>
 
+  @if (loading()) {
+    <div class="info">資料載入中...</div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      {{ error() }}
+      <button type="button" class="ghost" (click)="loadTodos()">重試</button>
+    </div>
+  }
+
   <form class="todo-form" (submit)="addTodo(); $event.preventDefault()">
     <input
       type="text"
@@ -33,8 +44,8 @@
       @if (hasCompleted()) {
         <button type="button" class="ghost" (click)="clearCompleted()">清除已完成</button>
       }
-      <button type="button" class="ghost danger" (click)="clearStorageData()">
-        清除所有保存的資料
+      <button type="button" class="ghost" (click)="loadTodos()">
+        重新整理
       </button>
     </div>
   </div>

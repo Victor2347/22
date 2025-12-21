@@ -122,10 +122,25 @@ button:active {
   border: 1px solid #bfdbfe;
 }
 
-.ghost.danger {
+.info,
+.error {
+  margin: 8px 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.info {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.error {
+  background: #fef2f2;
   color: #b91c1c;
   border-color: #fecdd3;
-  background: #fff1f2;
 }
 
 .todo-list {
