@@ -5,7 +5,8 @@ import {
   addTodo as addTodoApi,
   fetchTodos,
   removeTodo as removeTodoApi,
-  toggleTodo as toggleTodoApi
+  toggleTodo as toggleTodoApi,
+  updateTodoTitle
 } from '../supabase.service';
 
 type Filter = 'all' | 'active' | 'done';
@@ -31,6 +32,8 @@ export class App {
   protected todos = signal<Todo[]>([]);
   protected loading = signal(false);
   protected error = signal<string | null>(null);
+  protected editingId = signal<number | null>(null);
+  protected editingTitle = signal('');
 
   constructor() {
     if (this.isBrowser) this.loadTodos();
@@ -149,6 +152,44 @@ export class App {
       this.todos.set(prev);
       console.error(err);
       this.error.set(err?.message ?? '清除已完成失敗');
+    }
+  }
+
+  protected startEdit(todo: Todo): void {
+    this.editingId.set(todo.id);
+    this.editingTitle.set(todo.title);
+  }
+
+  protected cancelEdit(): void {
+    this.editingId.set(null);
+    this.editingTitle.set('');
+  }
+
+  protected async saveEdit(): Promise<void> {
+    const id = this.editingId();
+    const title = this.editingTitle().trim();
+    if (!id || !title) {
+      this.cancelEdit();
+      return;
+    }
+
+    const prev = this.todos();
+    this.todos.update((list) =>
+      list.map((t) => (t.id === id ? { ...t, title } : t))
+    );
+
+    try {
+      const updated = await updateTodoTitle(id, title);
+      if (updated) {
+        this.todos.update((list) =>
+          list.map((t) => (t.id === id ? { ...t, title: updated.title } : t))
+        );
+      }
+      this.cancelEdit();
+    } catch (err: any) {
+      this.todos.set(prev);
+      console.error(err);
+      this.error.set(err?.message ?? '更新失敗');
     }
   }
 }

@@ -25,3 +25,15 @@ export async function removeTodo(id: number) {
   const { error } = await supabase.from('todos').delete().eq('id', id);
   if (error) throw error;
 }
+
+export async function updateTodoTitle(id: number, title: string) {
+  const { data, error } = await supabase
+    .from('todos')
+    .update({ title })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}

@@ -194,6 +194,37 @@ button:active {
   line-height: 0;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .empty {
   padding: 16px;
   text-align: center;

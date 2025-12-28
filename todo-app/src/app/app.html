@@ -56,22 +56,42 @@
     } @else {
       @for (todo of filteredTodos(); track todo.id) {
         <li class="todo-item" [class.done]="todo.done">
-          <label>
-            <input
-              type="checkbox"
-              [checked]="todo.done"
-              (change)="toggleTodo(todo.id)"
-            />
-            <span>{{ todo.title }}</span>
-          </label>
-          <button
-            type="button"
-            class="icon"
-            aria-label="刪除待辦"
-            (click)="removeTodo(todo.id)"
-          >
-            ✕
-          </button>
+          @if (editingId() === todo.id) {
+            <div class="edit-row">
+              <input
+                class="edit-input"
+                type="text"
+                [(ngModel)]="editingTitle"
+                (keyup.enter)="saveEdit()"
+                (keyup.escape)="cancelEdit()"
+                autofocus
+              />
+              <div class="edit-actions">
+                <button type="button" class="ghost" (click)="saveEdit()">保存</button>
+                <button type="button" class="ghost" (click)="cancelEdit()">取消</button>
+              </div>
+            </div>
+          } @else {
+            <label>
+              <input
+                type="checkbox"
+                [checked]="todo.done"
+                (change)="toggleTodo(todo.id)"
+              />
+              <span>{{ todo.title }}</span>
+            </label>
+            <div class="actions">
+              <button type="button" class="ghost" (click)="startEdit(todo)">編輯</button>
+              <button
+                type="button"
+                class="icon"
+                aria-label="刪除待辦"
+                (click)="removeTodo(todo.id)"
+              >
+                ✕
+              </button>
+            </div>
+          }
         </li>
       }
     }
